@@ -1,0 +1,42 @@
+<!DOCTYPE html> <!-- Declaración del tipo de documento HTML -->
+<html lang="es"> <!-- Elemento raíz del documento HTML, especifica que el idioma es español -->
+
+<head> <!-- Contiene metadatos del documento HTML -->
+    <meta charset="UTF-8"> <!-- Especifica la codificación de caracteres para el documento -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Hace que la página web sea responsive -->
+    <title>Modelo de Toxicidad</title> <!-- Define el título del documento -->
+</head>
+
+<body> <!-- Contiene el contenido visible de la página web -->
+    <h1>Modelo de Toxicidad</h1> <!-- Encabezado de la página web -->
+    <p>Introduce una palabra o frase para verificar su toxicidad:</p> <!-- Instrucción para el usuario -->
+    <input type="text" id="textInput"> <!-- Campo de entrada de texto para el usuario -->
+    <button onclick="handleInput()">Verificar Toxicidad</button> <!-- Botón que llama a la función handleInput cuando se hace clic en él -->
+
+    <!-- Importar TensorFlow.js y el modelo de toxicidad -->
+    <script src="tensorFlowCDN.js"></script> <!-- Importa TensorFlow.js desde un archivo local -->
+    <script src="toxicityCDN.js"></script> <!-- Importa el modelo de toxicidad desde un archivo local -->
+
+    <script>
+        // Función para cargar el modelo y predecir la toxicidad
+        async function predictToxicity(text) {
+            const model = await toxicity.load(); // Carga el modelo de toxicidad
+            const predictions = await model.classify(text); // Clasifica el texto introducido por el usuario
+            return predictions; // Devuelve las predicciones
+        }
+
+        // Función para manejar la entrada del usuario
+        async function handleInput() {
+            console.log('Verificando toxicidad...'); // Imprime un mensaje en la consola
+            const textInput = document.getElementById('textInput').value; // Obtiene el valor del campo de entrada de texto
+            const predictions = await predictToxicity(textInput); // Obtiene las predicciones de toxicidad para el texto introducido
+            console.log("esta aca");
+            predictions.forEach(prediction => { // Para cada predicción
+                console.log(`${prediction.label}: ${prediction.results[0].match}`); // Imprime la etiqueta y el resultado en la consola
+                alert(`${prediction.label}: ${prediction.results[0].match}`); // Muestra una alerta con la etiqueta y el resultado
+            });
+        }
+    </script>
+</body>
+
+</html>
